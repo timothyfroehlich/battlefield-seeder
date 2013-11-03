@@ -70,10 +70,11 @@ while 1
    if( Not WinExists("Battlefield 4™")) Then
 	  ConsoleWrite("Thinking about joining " &@CRLF)
 	  CheckUserName($Username)
-	  If( (GetPlayerCount($ServerAddress) <  $MinimumPlayers) And (@error == 0) ) Then
-		 ConsoleWrite("Num players = " & GetPlayerCount($ServerAddress) & " Min Players = " & $MinimumPlayers & " @error = " & @error & @CRLF)
+	  If( (GetPlayerCount($ServerAddress) < $MinimumPlayers) And (@error = 0) ) Then
+		 ConsoleWrite("Going to join. Num players = " & GetPlayerCount($ServerAddress) & " Min Players = " & $MinimumPlayers & " @error = " & @error & @CRLF)
 		 JoinServer($ServerAddress)
 	  EndIf	  
+	  ConsoleWrite("Num players = " & GetPlayerCount($ServerAddress) & " Min Players = " & $MinimumPlayers & " @error = " & @error & @CRLF)
    Else
 	  ConsoleWrite("Thinking about kicking " &@CRLF)
 	  If (GetPlayerCount($ServerAddress) > $MaximumPlayers ) Then
@@ -129,13 +130,16 @@ Func GetPlayerCount($server_page)
    $slots = StringMid($response, $slots_loc)
    
   ; ConsoleWrite(stringleft($slots,100))
-   $2loc= StringInStr($slots, '"2"')
+   $2loc= StringInStr($slots, '"2":')
    $playercount_loc = $2loc+15
    $player_count = StringMid($slots, $playercount_loc, 2)
-   
-   if(not StringIsDigit($player_count)) Then $player_count = StringMid($slots, $playercount_loc, 1)
+ ;  ConsoleWrite(stringleft($slots,100) & @CRLF)
+
+   if(not StringIsInt($player_count)) Then 
+	  $player_count = StringMid($slots, $playercount_loc, 1)
+   EndIf
 	  
-   if(not StringIsDigit($player_count)) Then 
+   if(not StringIsInt($player_count)) Then 
 	  TrayTip($ProgName,"Cannot load server page",10)
 	  SetError(1)
 	  return -1
@@ -144,7 +148,7 @@ Func GetPlayerCount($server_page)
    ConsoleWrite("Player count: "& $player_count & @CRLF)
    if $DisplayPlayerCount == "true" Then TrayTip($ProgName,"Player count: "& $player_count , 10) 
    
-   return $player_count
+   return Int($player_count)
 EndFunc
 
 

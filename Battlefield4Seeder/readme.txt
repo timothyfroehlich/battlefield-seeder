@@ -26,7 +26,6 @@ SleepWhenSeeding is active when BF3 is open, SleepWhenNotSeeding is active when 
 States to test:
 Not logged in.
 Logged in with wrong user.
-Logged out.
 Server is down
 Server is empty
 Server is full
