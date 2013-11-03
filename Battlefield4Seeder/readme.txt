@@ -21,3 +21,12 @@ There will be an entry in your system tray with the same logo as the script. Rig
 What are "SleepWhen[Not]Seeding" in the settings?
 These specify how often (in minutes) to open up internet explorer and check the player count of the server. Checking the player count occurs in the background but you will see your PC momentarily slow down when it opens IE.
 SleepWhenSeeding is active when BF3 is open, SleepWhenNotSeeding is active when BF3 is not open.
+
+----------------------
+States to test:
+Not logged in.
+Logged in with wrong user.
+Logged out.
+Server is down
+Server is empty
+Server is full
