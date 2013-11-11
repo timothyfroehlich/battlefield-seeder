@@ -4,7 +4,7 @@
 
 opt("WinTitleMatchMode",2)
 $Settingsini = "BF4SeederSettings.ini"
-$ProgName = "Battlefield4 Auto-Seeder"
+$ProgName = "Battlefield Auto-Seeder"
 Global $G_ie
 
 If _Singleton($ProgName, 1) = 0 Then
@@ -20,45 +20,36 @@ if True Then ;READ SETTINGS - This is just so I can compress the setting section
 
    $ServerAddress=IniRead($Settingsini, "All", "ServerAddress", "")
    if $ServerAddress == "" Then 
-	  MsgBox(1, $ProgName,"Invalid ServerAddress, exiting") 
+	  MsgBox(1, $ProgName,"Invalid ServerAddress setting.") 
 	  Exit 
    EndIf
 
    $MinimumPlayers=IniRead($Settingsini, "All", "MinPlayers", "")
    if $MinimumPlayers == "" Then 
-	  MsgBox(1, $ProgName,"Invalid MinPlayers, exiting") 
+	  MsgBox(1, $ProgName,"Invalid MinPlayers setting.") 
 	  Exit 
    EndIf
 
    $MaximumPlayers=IniRead($Settingsini, "All", "MaxPlayers", "")
    if $MaximumPlayers == "" Then 
-	  MsgBox(1, $ProgName,"Invalid MaxPlayers, exiting") 
+	  MsgBox(1, $ProgName,"Invalid MaxPlayers setting.") 
 	  Exit 
-   EndIf
-
-   $SleepWhenNotSeeding=IniRead($Settingsini, "All", "SleepWhenNotSeeding", "")
-   if $SleepWhenNotSeeding == "" Then 
-	  MsgBox(1, $ProgName,"Invalid MaxPlayers, exiting") 
-	  Exit 
-   EndIf
-
-   $SleepWhenSeeding=IniRead($Settingsini, "All", "SleepWhenSeeding", "")
-   if $SleepWhenSeeding == "" Then 
-	  MsgBox(1, $ProgName,"Invalid MaxPlayers, exiting") 
-	  Exit 
-   EndIf
-
-   Global $DisplayPlayerCount=IniRead($Settingsini, "All", "DisplayPlayerCount", "")
-   if $DisplayPlayerCount == "" Then 
-	  IniWrite($Settingsini,"All","DisplayPlayerCount","true")
-	  $DisplayPlayerCount = "true"
    EndIf
    
-   $Username=IniRead($Settingsini, "All", "Username", "")
-   if $Username == "" Then 
-	  MsgBox(1, $ProgName,"Can't find username, exiting") 
+      $Game=IniRead($Settingsini', "All", "Game", "BF4")
+   If $Game == "BF4" Then
+	  $GameName = "Battlefield 4™"
+   ElseIf $Game == "BF3" Then
+	  $GameName = "Battlefield 3™"
+   Else
+	  	  MsgBox(1, $ProgName,"Invalid Game setting. Possible values are BF4 and BF3.") 
 	  Exit 
-   EndIf
+
+
+   $SleepWhenNotSeeding=IniRead($Settingsini, "All", "SleepWhenNotSeeding", 1)
+   $SleepWhenSeeding=IniRead($Settingsini, "All", "SleepWhenSeeding", 1)
+   Global $DisplayPlayerCount=IniRead($Settingsini, "All", "DisplayPlayerCount", "true")
+   $Username=IniRead($Settingsini, "All", "Username", "")
 
 EndIf
 
