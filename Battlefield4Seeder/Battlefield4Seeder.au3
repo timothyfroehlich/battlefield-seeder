@@ -36,14 +36,16 @@ if True Then ;READ SETTINGS - This is just so I can compress the setting section
 	  Exit 
    EndIf
    
-      $Game=IniRead($Settingsini', "All", "Game", "BF4")
+   $Game=IniRead($Settingsini, "All", "Game", "BF4")
    If $Game == "BF4" Then
 	  $GameName = "Battlefield 4™"
    ElseIf $Game == "BF3" Then
 	  $GameName = "Battlefield 3™"
    Else
-	  	  MsgBox(1, $ProgName,"Invalid Game setting. Possible values are BF4 and BF3.") 
+	  MsgBox(1, $ProgName,"Invalid Game setting. Possible values are BF4 and BF3.") 
 	  Exit 
+   EndIf
+   
 
 
    $SleepWhenNotSeeding=IniRead($Settingsini, "All", "SleepWhenNotSeeding", 1)
@@ -58,16 +60,18 @@ EndIf
 while 1
    $G_ie = OpenIE()
 
-   if( Not WinExists("Battlefield 4™")) Then
-	  ConsoleWrite("Thinking about joining " &@CRLF)
-	  CheckUserName($Username)
+   if( Not WinExists($GameName)) Then
+	  
+	  If $Username <> "" Then
+		 CheckUserName($Username)
+	  Else
+		 CheckLoggedIn()
+	  EndIf
+	  
 	  If( (GetPlayerCount($ServerAddress) < $MinimumPlayers) And (@error = 0) ) Then
-		 ConsoleWrite("Going to join. Num players = " & GetPlayerCount($ServerAddress) & " Min Players = " & $MinimumPlayers & " @error = " & @error & @CRLF)
 		 JoinServer($ServerAddress)
 	  EndIf	  
-	  ConsoleWrite("Num players = " & GetPlayerCount($ServerAddress) & " Min Players = " & $MinimumPlayers & " @error = " & @error & @CRLF)
    Else
-	  ConsoleWrite("Thinking about kicking " &@CRLF)
 	  If (GetPlayerCount($ServerAddress) > $MaximumPlayers ) Then
 		 KickSelf()
 	  EndIf
@@ -75,7 +79,7 @@ while 1
 	  
    CloseIE()
 	  
-   if( WinExists("Battlefield 4™")) Then
+   if( WinExists($GameName)) Then
 	  sleep($SleepWhenSeeding * 60 * 1000)
    Else
 	  sleep($SleepWhenNotSeeding * 60 * 1000)
@@ -111,6 +115,14 @@ Func CheckUsername($username)
    EndIf
    
 EndFunc
+
+Func CheckLoggedIn()   
+   _IENavigate($G_ie, "http://battlelog.battlefield.com/bf4/")
+   $response = _IEBodyReadHTML($G_ie)
+   
+   ConsoleWrite($response)
+EndFunc
+
 
 Func GetPlayerCount($server_page)
    
@@ -155,11 +167,11 @@ Func JoinServer($server_page)
    _IENavigate($G_ie, $ServerAddress)
    $G_ie.visible= "True"
    $G_ie.document.parentwindow.execScript('document.getElementsByClassName("btn btn-primary btn-large large arrow")[0].click()')
-   WinWaitActive("Battlefield 4™", "",5*60)
+   WinWaitActive($GameName, "",5*60)
    sleep(10000)
    Send("!{TAB}")
    sleep(10000)
-   WinSetState("Battlefield 4™", "",@SW_MINIMIZE)
+   WinSetState($GameName, "",@SW_MINIMIZE)
    $G_ie.visible= "False"
 
 EndFunc
@@ -168,7 +180,7 @@ Func KickSelf()
    $rc = MsgBox(1, $ProgName, "Server is filling up. Auto-kicking in ten seconds...",10)
    if( $rc == 2) Then Exit 
 	  
-   WinClose("Battlefield 4™")
+   WinClose($GameName)
    
 EndFunc
    
